@@ -61,8 +61,6 @@ p.bd-links__title {
 
 .version-switcher__button {
     margin-left: 20px !important;
-    display: flex !important;
-    justify-content: flex-end !important;
     align-items: center;
 }
 
