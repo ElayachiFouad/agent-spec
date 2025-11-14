@@ -78,11 +78,15 @@ Click on the components and section names to access the complete API documentati
 
 :class:`pyagentspec.flows.nodes.FlowNode <pyagentspec.flows.nodes.flownode.FlowNode>`                            :docstring:`pyagentspec.flows.nodes.flownode.FlowNode`
 
+:class:`pyagentspec.flows.nodes.ParallelFlowNode <pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode>`    :docstring:`pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode`
+
 :class:`pyagentspec.flows.nodes.InputMessageNode <pyagentspec.flows.nodes.inputmessagenode.InputMessageNode>`    :docstring:`pyagentspec.flows.nodes.inputmessagenode.InputMessageNode`
 
 :class:`pyagentspec.flows.nodes.LlmNode <pyagentspec.flows.nodes.llmnode.LlmNode>`                               :docstring:`pyagentspec.flows.nodes.llmnode.LlmNode`
 
 :class:`pyagentspec.flows.nodes.MapNode <pyagentspec.flows.nodes.mapnode.MapNode>`                               :docstring:`pyagentspec.flows.nodes.mapnode.MapNode`
+
+:class:`pyagentspec.flows.nodes.ParallelMapNode <pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode>`       :docstring:`pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode`
 
 :class:`pyagentspec.flows.nodes.OutputMessageNode <pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode>` :docstring:`pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode`
 

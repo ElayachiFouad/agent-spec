@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/flows';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://oracle.github.io/agent-spec/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://elayachifouad.github.io/agent-spec/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '26.1.0.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -360,7 +360,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_a2aagent.html">Build an A2A Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_swarm.html">Build a Swarm of Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_managerworkers.html">Build a Manager-Worker Multi-Agent System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_structured_generation.html">How to Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_structured_generation.html">Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_parallelflownode.html">Run Multiple Flows in Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_execute_agentspec_with_wayflow.html">How to Execute Agent Spec Configuration with WayFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_execute_agentspec_across_frameworks.html">How to Execute Agent Spec Across Frameworks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_plugin.html">How to use custom components with the Plugin System</a></li>
@@ -1512,6 +1513,55 @@ using the “wisdowm of the crowd” effect:</p>
 
 </dd></dl>
 
+<span class="target" id="parallelflownode"></span><dl class="py class">
+<dt class="sig sig-object py" id="pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyagentspec.flows.nodes.parallelflownode.</span></span><span class="sig-name descname"><span class="pre">ParallelFlowNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branches=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subflows=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyagentspec.flows.node.Node" title="pyagentspec.flows.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<p>The parallel flow node executes multiple subflows in parallel.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Inputs</strong></dt><dd><p>Inferred from the inner structure. It’s the union of the sets of inputs of the inner flows.
+Inputs of different inner flows that have the same name are merged if they have the same type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Outputs</strong></dt><dd><p>Inferred from the inner structure. It’s the union of the outputs of the inner flows.
+Outputs of different inner flows that have the same name are not allowed.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Branches</strong></dt><dd><p>One, the default next.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p class="rubric">Examples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – A unique identifier for this Component</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of this Component</p></li>
+<li><p><strong>description</strong> (<em>str</em><em> | </em><em>None</em>) – Optional description of this Component</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Optional, additional metadata related to this Component</p></li>
+<li><p><strong>min_agentspec_version</strong> (<em>AgentSpecVersionEnum</em>) – </p></li>
+<li><p><strong>max_agentspec_version</strong> (<em>AgentSpecVersionEnum</em>) – </p></li>
+<li><p><strong>inputs</strong> (<em>List</em><em>[</em><a class="reference internal" href="ioproperties.html#pyagentspec.property.Property" title="pyagentspec.property.Property"><em>Property</em></a><em>] </em><em>| </em><em>None</em>) – List of inputs accepted by this component</p></li>
+<li><p><strong>outputs</strong> (<em>List</em><em>[</em><a class="reference internal" href="ioproperties.html#pyagentspec.property.Property" title="pyagentspec.property.Property"><em>Property</em></a><em>] </em><em>| </em><em>None</em>) – List of outputs exposed by this component</p></li>
+<li><p><strong>branches</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The list of outgoing branch names that the node will expose</p></li>
+<li><p><strong>subflows</strong> (<em>List</em><em>[</em><a class="reference internal" href="#pyagentspec.flows.flow.Flow" title="pyagentspec.flows.flow.Flow"><em>Flow</em></a><em>]</em>) – The flows that should be executed in parallel</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode.subflows">
+<span class="sig-name descname"><span class="pre">subflows</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyagentspec.flows.flow.Flow" title="pyagentspec.flows.flow.Flow"><span class="pre">Flow</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode.subflows" title="Permalink to this definition">#</a></dt>
+<dd><p>The flows that should be executed in parallel</p>
+</dd></dl>
+
+</dd></dl>
+
 <span class="target" id="inputmessagenode"></span><dl class="py class">
 <dt class="sig sig-object py" id="pyagentspec.flows.nodes.inputmessagenode.InputMessageNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyagentspec.flows.nodes.inputmessagenode.</span></span><span class="sig-name descname"><span class="pre">InputMessageNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_agentspec_version=AgentSpecVersionEnum.v25_4_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branches=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode" title="Permalink to this definition">#</a></dt>
@@ -2018,6 +2068,196 @@ It’s a dictionary mapping the name of an output to the respective reduction me
 
 </dd></dl>
 
+<span class="target" id="parallelmapnode"></span><dl class="py class">
+<dt class="sig sig-object py" id="pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyagentspec.flows.nodes.parallelmapnode.</span></span><span class="sig-name descname"><span class="pre">ParallelMapNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branches=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reducers=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyagentspec.flows.node.Node" title="pyagentspec.flows.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<p>The parallel map node executes a subflow on each element of a given input in a parallel manner.</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt><strong>Inputs</strong></dt><dd><p>Inferred from the inner structure. It’s the sets of inputs
+required by the StartNode of the inner flow.
+The names of the inputs will be the ones of the inner flow,
+complemented with the <code class="docutils literal notranslate"><span class="pre">iterated_</span></code> prefix. Their type is
+<code class="docutils literal notranslate"><span class="pre">Union[inner_type,</span> <span class="pre">List[inner_type]]</span></code>, where <code class="docutils literal notranslate"><span class="pre">inner_type</span></code>
+is the type of the respective input in the inner flow.</p>
+<p>If None is given, <code class="docutils literal notranslate"><span class="pre">pyagentspec</span></code> infers input properties directly from the inner flow,
+specifying title and type according to the rules defined above.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Outputs</strong></dt><dd><p>Inferred from the inner structure. It’s the union of the
+sets of outputs exposed by the EndNodes of the inner flow,
+combined with the reducer method of each output.
+The names of the outputs will be the ones of the inner flow,
+complemented with the <code class="docutils literal notranslate"><span class="pre">collected_</span></code> prefix. Their type depends
+on the <code class="docutils literal notranslate"><span class="pre">reduce</span></code> method specified for that output:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">List</span></code> of the respective output type in case of <code class="docutils literal notranslate"><span class="pre">append</span></code></p></li>
+<li><p>same type of the respective output type in case of <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">avg</span></code></p></li>
+</ul>
+<p>If None is given, <code class="docutils literal notranslate"><span class="pre">pyagentspec</span></code> infers outputs by exposing
+an output property for each entry in the <code class="docutils literal notranslate"><span class="pre">reducers</span></code> dictionary, specifying title
+and type according to the rules defined above.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Branches</strong></dt><dd><p>One, the default next.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>In this example we create a flow that generates a summary of the given articles that talk about LLMs.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">BooleanProperty</span><span class="p">,</span> <span class="n">StringProperty</span><span class="p">,</span> <span class="n">ListProperty</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.flows.edges</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlFlowEdge</span><span class="p">,</span> <span class="n">DataFlowEdge</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.flows.flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flow</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.flows.nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">EndNode</span><span class="p">,</span> <span class="n">StartNode</span><span class="p">,</span> <span class="n">ParallelMapNode</span><span class="p">,</span> <span class="n">LlmNode</span><span class="p">,</span> <span class="n">BranchingNode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.flows.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+</pre></div>
+</div>
+<p>First we define the flow that determines if an article talks about LLMs or not:</p>
+<ul class="simple">
+<li><p>if it does, we return it, so that we will use it for our summary</p></li>
+<li><p>if it does not, we don’t return its text</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">create_data_flow_edge</span><span class="p">(</span><span class="n">source_node</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">property_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFlowEdge</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">DataFlowEdge</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source_node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">destination_node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">property_name</span><span class="si">}</span><span class="s2">_edge&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">source_node</span><span class="o">=</span><span class="n">source_node</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">source_output</span><span class="o">=</span><span class="n">property_name</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">destination_node</span><span class="o">=</span><span class="n">destination_node</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">destination_input</span><span class="o">=</span><span class="n">property_name</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">article_property</span> <span class="o">=</span> <span class="n">StringProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;article&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_llm_article_property</span> <span class="o">=</span> <span class="n">StringProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;is_article&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">llm_node</span> <span class="o">=</span> <span class="n">LlmNode</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;check_if_article_talks_about_llms_node&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">prompt_template</span><span class="o">=</span><span class="s2">&quot;Look at this article:</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>{{article}}
+Does it talk about LLMs? Answer <cite>yes</cite> or <cite>no</cite>.
+“,</p>
+<blockquote>
+<div><p>…     llm_config=llm_config,
+…     inputs=[article_property],
+…     outputs=[is_llm_article_property],
+… )
+&gt;&gt;&gt;
+&gt;&gt;&gt; branching_node = BranchingNode(
+…     name=”decide_if_we_should_return_the_article”,
+…     mapping={“yes”: “yes”},
+…     inputs=[is_llm_article_property],
+… )
+&gt;&gt;&gt;
+&gt;&gt;&gt; start_node = StartNode(name=”start”, inputs=[article_property])
+&gt;&gt;&gt; end_node_with_output = EndNode(name=”end_with_output”, outputs=[article_property])
+&gt;&gt;&gt; end_node_without_output = EndNode(name=”end_without_output”, outputs=[])
+&gt;&gt;&gt;
+&gt;&gt;&gt; check_if_article_is_about_llm_flow = Flow(
+…     name=”is_article_about_llm_flow”,
+…     start_node=start_node,
+…     nodes=[start_node, llm_node, end_node_with_output, end_node_without_output, branching_node],
+…     control_flow_connections=[
+…         ControlFlowEdge(name=”start_to_llm”, from_node=start_node, to_node=llm_node),
+…         ControlFlowEdge(name=”llm_to_branching”, from_node=llm_node, to_node=branching_node),
+…         ControlFlowEdge(name=”branching_to_end_with”, from_node=branching_node, to_node=end_node_with_output),
+…         ControlFlowEdge(name=”branching_to_end_without”, from_node=branching_node, to_node=end_node_without_output),
+…     ],
+…     data_flow_connections=[
+…         create_data_flow_edge(start_node, llm_node, article_property.title),
+…         create_data_flow_edge(llm_node, branching_node, is_llm_article_property.title),
+…         create_data_flow_edge(start_node, end_node_with_output, article_property.title),
+…     ],
+…     outputs=[StringProperty(title=article_property.title, default=””)],
+… )</p>
+<p>We put this flow into a <code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code>, so that we can perform the check
+in parallel on multiple articles at the same time.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">list_of_articles_property</span> <span class="o">=</span> <span class="n">ListProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;iterated_article&quot;</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="n">article_property</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_of_articles_about_llm_property</span> <span class="o">=</span> <span class="n">ListProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;collected_article&quot;</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="n">article_property</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parallel_article_check_node</span> <span class="o">=</span> <span class="n">ParallelMapNode</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;parallel_check_if_articles_talk_about_llms_node&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">subflow</span><span class="o">=</span><span class="n">check_if_article_is_about_llm_flow</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">list_of_articles_property</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">list_of_articles_about_llm_property</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we create the flow that takes the list of articles as input, filters them through the
+<code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code> we have just created, and we generate the summary with the remaining articles.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_property</span> <span class="o">=</span> <span class="n">StringProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;summary&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">summary_llm_node</span> <span class="o">=</span> <span class="n">LlmNode</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generate_summary_of_llm_articles_node&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">prompt_template</span><span class="o">=</span><span class="s2">&quot;Summarize the following articles that talk about LLMs:</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>{{collected_article}}
+“,</p>
+<blockquote>
+<div><p>…     llm_config=llm_config,
+…     inputs=[list_of_articles_about_llm_property],
+…     outputs=[summary_property],
+… )
+&gt;&gt;&gt;
+&gt;&gt;&gt; start_node = StartNode(name=”start”, inputs=[list_of_articles_property])
+&gt;&gt;&gt; end_node = EndNode(name=”end”, outputs=[summary_property])
+&gt;&gt;&gt; generate_summary_of_llm_articles_flow = Flow(
+…     name=”Generate summary of articles about LLMs flow”,
+…     start_node=start_node,
+…     nodes=[start_node, parallel_article_check_node, summary_llm_node, end_node],
+…     control_flow_connections=[
+…         ControlFlowEdge(name=”start_to_parallelmap”, from_node=start_node, to_node=parallel_article_check_node),
+…         ControlFlowEdge(name=”parallelmap_to_llm”, from_node=parallel_article_check_node, to_node=summary_llm_node),
+…         ControlFlowEdge(name=”llm_to_end”, from_node=summary_llm_node, to_node=end_node),
+…     ],
+…     data_flow_connections=[
+…         create_data_flow_edge(start_node, parallel_article_check_node, list_of_articles_property.title),
+…         create_data_flow_edge(parallel_article_check_node, summary_llm_node, list_of_articles_about_llm_property.title),
+…         create_data_flow_edge(summary_llm_node, end_node, summary_property.title),
+…     ],
+… )</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – A unique identifier for this Component</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of this Component</p></li>
+<li><p><strong>description</strong> (<em>str</em><em> | </em><em>None</em>) – Optional description of this Component</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Optional, additional metadata related to this Component</p></li>
+<li><p><strong>min_agentspec_version</strong> (<em>AgentSpecVersionEnum</em>) – </p></li>
+<li><p><strong>max_agentspec_version</strong> (<em>AgentSpecVersionEnum</em>) – </p></li>
+<li><p><strong>inputs</strong> (<em>List</em><em>[</em><a class="reference internal" href="ioproperties.html#pyagentspec.property.Property" title="pyagentspec.property.Property"><em>Property</em></a><em>] </em><em>| </em><em>None</em>) – List of inputs accepted by this component</p></li>
+<li><p><strong>outputs</strong> (<em>List</em><em>[</em><a class="reference internal" href="ioproperties.html#pyagentspec.property.Property" title="pyagentspec.property.Property"><em>Property</em></a><em>] </em><em>| </em><em>None</em>) – List of outputs exposed by this component</p></li>
+<li><p><strong>branches</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The list of outgoing branch names that the node will expose</p></li>
+<li><p><strong>subflow</strong> (<a class="reference internal" href="#pyagentspec.flows.flow.Flow" title="pyagentspec.flows.flow.Flow"><em>Flow</em></a>) – The flow that should be applied to all the input values</p></li>
+<li><p><strong>reducers</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>ReductionMethod</em><em>] </em><em>| </em><em>None</em>) – The way the outputs of the different executions (map) should be collected together (reduce).
+It’s a dictionary mapping the name of an output to the respective reduction method
+(e.g., append, sum, avg, …, allowed methods depend on the type of the output)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.reducers">
+<span class="sig-name descname"><span class="pre">reducers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ReductionMethod</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.reducers" title="Permalink to this definition">#</a></dt>
+<dd><p>The way the outputs of the different executions (map) should be collected together (reduce).
+It’s a dictionary mapping the name of an output to the respective reduction method
+(e.g., append, sum, avg, …, allowed methods depend on the type of the output)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.subflow">
+<span class="sig-name descname"><span class="pre">subflow</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyagentspec.flows.flow.Flow" title="pyagentspec.flows.flow.Flow"><span class="pre">Flow</span></a></em><a class="headerlink" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.subflow" title="Permalink to this definition">#</a></dt>
+<dd><p>The flow that should be applied to all the input values</p>
+</dd></dl>
+
+</dd></dl>
+
 <span class="target" id="outputmessagenode"></span><dl class="py class">
 <dt class="sig sig-object py" id="pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyagentspec.flows.nodes.outputmessagenode.</span></span><span class="sig-name descname"><span class="pre">OutputMessageNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_agentspec_version=AgentSpecVersionEnum.v25_4_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_agentspec_version=AgentSpecVersionEnum.v25_4_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branches=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode" title="Permalink to this definition">#</a></dt>
@@ -2370,6 +2610,10 @@ must be an exact match</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.flownode.FlowNode.subflow"><code class="docutils literal notranslate"><span class="pre">FlowNode.subflow</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode"><code class="docutils literal notranslate"><span class="pre">ParallelFlowNode</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode.subflows"><code class="docutils literal notranslate"><span class="pre">ParallelFlowNode.subflows</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode"><code class="docutils literal notranslate"><span class="pre">InputMessageNode</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode.DEFAULT_OUTPUT"><code class="docutils literal notranslate"><span class="pre">InputMessageNode.DEFAULT_OUTPUT</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode.message"><code class="docutils literal notranslate"><span class="pre">InputMessageNode.message</span></code></a></li>
@@ -2384,6 +2628,11 @@ must be an exact match</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.mapnode.MapNode"><code class="docutils literal notranslate"><span class="pre">MapNode</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.mapnode.MapNode.reducers"><code class="docutils literal notranslate"><span class="pre">MapNode.reducers</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.mapnode.MapNode.subflow"><code class="docutils literal notranslate"><span class="pre">MapNode.subflow</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode"><code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.reducers"><code class="docutils literal notranslate"><span class="pre">ParallelMapNode.reducers</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode.subflow"><code class="docutils literal notranslate"><span class="pre">ParallelMapNode.subflow</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode"><code class="docutils literal notranslate"><span class="pre">OutputMessageNode</span></code></a><ul class="nav section-nav flex-column">

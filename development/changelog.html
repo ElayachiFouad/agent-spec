@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'changelog';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://oracle.github.io/agent-spec/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://elayachifouad.github.io/agent-spec/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '26.1.0.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -359,7 +359,8 @@
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_a2aagent.html">Build an A2A Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_swarm.html">Build a Swarm of Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_managerworkers.html">Build a Manager-Worker Multi-Agent System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_structured_generation.html">How to Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_structured_generation.html">Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_parallelflownode.html">Run Multiple Flows in Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_execute_agentspec_with_wayflow.html">How to Execute Agent Spec Configuration with WayFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_execute_agentspec_across_frameworks.html">How to Execute Agent Spec Across Frameworks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_plugin.html">How to use custom components with the Plugin System</a></li>
@@ -455,6 +456,12 @@
 <section id="new-features">
 <h3>New features<a class="headerlink" href="#new-features" title="Permalink to this heading">#</a></h3>
 <ul>
+<li><p><strong>ParallelFlowNode and ParallelMapNode</strong></p>
+<p>Added support for parallelization in Agent Spec through <a class="reference internal" href="api/flows.html#parallelflownode"><span class="std std-ref">ParallelFlowNode</span></a>, which runs several
+flows in parallel, and <a class="reference internal" href="api/flows.html#parallelmapnode"><span class="std std-ref">ParallelMapNode</span></a>, which is a parallel version of the <code class="docutils literal notranslate"><span class="pre">MapNode</span></code>.
+For more information, check out the corresponding <a class="reference internal" href="howtoguides/howto_parallelflownode.html"><span class="doc">parallel flows how-to guide</span></a>
+and <a class="reference internal" href="howtoguides/howto_mapnode.html"><span class="doc">map-reduce how-to guide</span></a>.</p>
+</li>
 <li><p><strong>Tools with User Confirmation</strong></p>
 <p>Tools now have a new flag named <cite>requires_confirmation</cite>, which can be set to require user/operator approval before running the tool.
 For more information read the <a class="reference internal" href="api/tools.html"><span class="doc">API Reference</span></a>.</p>

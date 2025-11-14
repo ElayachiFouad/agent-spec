@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/index';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://oracle.github.io/agent-spec/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://elayachifouad.github.io/agent-spec/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '26.1.0.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -360,7 +360,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_a2aagent.html">Build an A2A Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_swarm.html">Build a Swarm of Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_managerworkers.html">Build a Manager-Worker Multi-Agent System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_structured_generation.html">How to Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_structured_generation.html">Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_parallelflownode.html">Run Multiple Flows in Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_execute_agentspec_with_wayflow.html">How to Execute Agent Spec Configuration with WayFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_execute_agentspec_across_frameworks.html">How to Execute Agent Spec Across Frameworks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../howtoguides/howto_plugin.html">How to use custom components with the Plugin System</a></li>
@@ -530,14 +531,20 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.flownode.FlowNode" title="pyagentspec.flows.nodes.flownode.FlowNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.FlowNode</span></code></a></p></td>
 <td><p>The flow node executes a subflow as part of a flow.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode" title="pyagentspec.flows.nodes.inputmessagenode.InputMessageNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.InputMessageNode</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode" title="pyagentspec.flows.nodes.parallelflownode.ParallelFlowNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.ParallelFlowNode</span></code></a></p></td>
+<td><p>The parallel flow node executes multiple subflows in parallel.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.inputmessagenode.InputMessageNode" title="pyagentspec.flows.nodes.inputmessagenode.InputMessageNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.InputMessageNode</span></code></a></p></td>
 <td><p>This node interrupts the execution of the flow in order to wait for a user input, and restarts after receiving it.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.llmnode.LlmNode" title="pyagentspec.flows.nodes.llmnode.LlmNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.LlmNode</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.llmnode.LlmNode" title="pyagentspec.flows.nodes.llmnode.LlmNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.LlmNode</span></code></a></p></td>
 <td><p>Execute a prompt template with a given LLM.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.mapnode.MapNode" title="pyagentspec.flows.nodes.mapnode.MapNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.MapNode</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.mapnode.MapNode" title="pyagentspec.flows.nodes.mapnode.MapNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.MapNode</span></code></a></p></td>
 <td><p>The map node executes a subflow on each element of a given input as part of a flow.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode" title="pyagentspec.flows.nodes.parallelmapnode.ParallelMapNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.ParallelMapNode</span></code></a></p></td>
+<td><p>The parallel map node executes a subflow on each element of a given input in a parallel manner.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="flows.html#pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode" title="pyagentspec.flows.nodes.outputmessagenode.OutputMessageNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyagentspec.flows.nodes.OutputMessageNode</span></code></a></p></td>
 <td><p>This node appends an agent message to the ongoing flow conversation.</p></td>

@@ -56,7 +56,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'howtoguides/howto_mapnode';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://oracle.github.io/agent-spec/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://elayachifouad.github.io/agent-spec/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '26.1.0.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -361,7 +361,8 @@
 <li class="toctree-l2"><a class="reference internal" href="howto_a2aagent.html">Build an A2A Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto_swarm.html">Build a Swarm of Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto_managerworkers.html">Build a Manager-Worker Multi-Agent System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howto_structured_generation.html">How to Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_structured_generation.html">Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_parallelflownode.html">Run Multiple Flows in Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto_execute_agentspec_with_wayflow.html">How to Execute Agent Spec Configuration with WayFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto_execute_agentspec_across_frameworks.html">How to Execute Agent Spec Across Frameworks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howto_plugin.html">How to use custom components with the Plugin System</a></li>
@@ -566,6 +567,34 @@ This corresponds to the default behavior of the <code class="docutils literal no
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="enabling-parallelization">
+<h2>Enabling parallelization<a class="headerlink" href="#enabling-parallelization" title="Permalink to this heading">#</a></h2>
+<p>Agent Spec offers a parallel version of <code class="docutils literal notranslate"><span class="pre">MapNode</span></code> called <code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code> : the node’s behavior is
+equivalent, but the map operation is supposed to be performed in parallel.
+The flow we implemented for our map-reduce operation in this guide is well suited to enable parallelism,
+as it does not contain criticalities, such as access to mutable resources, or input requests.
+We can enable parallelism for the <code class="docutils literal notranslate"><span class="pre">MapNode</span></code> by simply changing the creation of the node to use the <code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListProperty</span><span class="p">,</span> <span class="n">StringProperty</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyagentspec.flows.nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParallelMapNode</span>
+
+<span class="n">parallel_map_node</span> <span class="o">=</span> <span class="n">ParallelMapNode</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;map_node&quot;</span><span class="p">,</span>
+    <span class="n">subflow</span><span class="o">=</span><span class="n">summarize_flow</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">ListProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;iterated_article&quot;</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="n">StringProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;article&quot;</span><span class="p">))],</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">ListProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;collected_summary&quot;</span><span class="p">,</span> <span class="n">item_type</span><span class="o">=</span><span class="n">StringProperty</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;summary&quot;</span><span class="p">))],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="notes-about-parallelization">
+<h3>Notes about parallelization<a class="headerlink" href="#notes-about-parallelization" title="Permalink to this heading">#</a></h3>
+<p>Not all sub-flows can be executed in parallel.
+Agent Spec does not forbid specific configurations for <code class="docutils literal notranslate"><span class="pre">ParallelMapNode</span></code> subflows, but there are several
+precautions to take when parallelization is enabled, especially when the sub-flow is supposed to access mutable
+shared resources (e.g., the conversation), or interrupt the normal execution of the flow (e.g., client tools).</p>
+<p>For more information about parallel execution support in Agent Spec, please check the <a class="reference internal" href="../agentspec/language_spec_nightly.html#agentspecspec-nightly"><span class="std std-ref">language specification</span></a>.
+For guidelines about secure implementation of concurrent execution, instead, check our <a class="reference internal" href="../security.html#securityconsiderations"><span class="std std-ref">security guidelines</span></a>.</p>
+</section>
 </section>
 <section id="agent-spec-serialization">
 <h2>Agent Spec Serialization<a class="headerlink" href="#agent-spec-serialization" title="Permalink to this heading">#</a></h2>
@@ -1334,6 +1363,10 @@ you may now proceed to <a class="reference internal" href="howto_orchestrator_ag
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-implementation">Basic implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enabling-parallelization">Enabling parallelization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes-about-parallelization">Notes about parallelization</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-spec-serialization">Agent Spec Serialization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recap">Recap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next steps</a></li>

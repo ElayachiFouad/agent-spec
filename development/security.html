@@ -55,7 +55,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'security';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://oracle.github.io/agent-spec/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://elayachifouad.github.io/agent-spec/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '26.1.0.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -360,7 +360,8 @@
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_a2aagent.html">Build an A2A Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_swarm.html">Build a Swarm of Agents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_managerworkers.html">Build a Manager-Worker Multi-Agent System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_structured_generation.html">How to Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_structured_generation.html">Build Flows with Structured LLM Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_parallelflownode.html">Run Multiple Flows in Parallel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_execute_agentspec_with_wayflow.html">How to Execute Agent Spec Configuration with WayFlow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_execute_agentspec_across_frameworks.html">How to Execute Agent Spec Across Frameworks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="howtoguides/howto_plugin.html">How to use custom components with the Plugin System</a></li>
@@ -700,6 +701,72 @@ utilities to avoid unsafe behavior.</p>
 </div>
 <p>When deploying serialized representation to an execution engine, use the engine’s secure loading mechanism for the import.</p>
 </section>
+<section id="considerations-regarding-parallelization">
+<h2>Considerations regarding Parallelization<a class="headerlink" href="#considerations-regarding-parallelization" title="Permalink to this heading">#</a></h2>
+<p>Agent Spec supports the configuration of flows that contain parallel nodes, enabling concurrent execution of sub-flows.
+While parallelization offers potential performance or latency benefits, it introduces its own set of security and
+operational risks that must be carefully managed.</p>
+<section id="execution-semantics-and-safety-guidelines">
+<h3>Execution Semantics and Safety Guidelines<a class="headerlink" href="#execution-semantics-and-safety-guidelines" title="Permalink to this heading">#</a></h3>
+<p>Agent Spec outlines the expected behavior for parallel execution, but it does not specify implementation details,
+since those are determined by each runtime.</p>
+<ul class="simple">
+<li><p><strong>For runtime developers</strong>: Always provide clear documentation on how parallelism is implemented and describe secure usage patterns.</p></li>
+<li><p><strong>For users</strong>: Always review the runtime’s documentation and follow its recommendations to use parallelism safely.</p></li>
+</ul>
+<p>A list of typical potential issues when dealing with parallelism follows.</p>
+<ul class="simple">
+<li><p><strong>Non-Deterministic, Nonatomic Execution Order</strong>: In Agent Spec, parallel nodes are explicitly declared with
+the understanding that the order and the atomicity of the execution of their sub-flows is <strong>not guaranteed</strong>.
+The system may schedule, start, or complete individual flows in any order, and the timing may vary across runs.
+<strong>Do not assume any deterministic ordering or synchronization between parallel tasks.</strong></p></li>
+<li><p><strong>Concurrent State Mutation Hazards</strong>: Parallel execution can lead to <strong>race conditions</strong> and <strong>state inconsistencies</strong>
+if multiple branches attempt to mutate shared resources or stateful entities (such as conversation history,
+external databases, or files) simultaneously.</p>
+<ul>
+<li><p><strong>Avoid write operations</strong> on shared or stateful objects within parallel branches where synchronization is not
+explicitly managed by the execution environment.</p></li>
+<li><p>For operations requiring state changes (e.g., sending messages, updating databases, modifying files),
+consider serializing those steps after parallel execution has completed, or use database transactions/locking
+mechanisms where supported.</p></li>
+</ul>
+</li>
+<li><p><strong>Interrupt Handling Limitations</strong>: Execution interrupts, such as tool confirmation steps, requesting additional input,
+or other interactive requirements, are <strong>not guaranteed to be coordinated or honored in a well-defined order</strong>
+within parallel branches.</p>
+<ul>
+<li><p>Avoid placing user input prompts, message outputs, or tool confirmation steps inside parallel blocks,
+as this can result in unpredictable, inconsistent, or undesirable user experiences.</p></li>
+<li><p>Design flows such that interactive or interrupt-driven logic occurs <strong>before</strong> or <strong>after</strong> parallel execution blocks.</p></li>
+</ul>
+</li>
+<li><p><strong>Error Propagation and Fault Isolation</strong>: Failure in one parallel branch might <strong>not automatically propagate</strong>
+to other branches. Carefully plan how errors are handled and consider using explicit error-handling logic to aggregate,
+report, or respond to errors from each concurrent path.</p>
+<ul>
+<li><p>Ensure that sensitive operations are performed atomically or idempotently to prevent security vulnerabilities due
+to partial updates or inconsistent state.</p></li>
+</ul>
+</li>
+<li><p><strong>Resource-Exhaustion Risks</strong>: Creating excessive parallelism (e.g., spawning large numbers of concurrent tool
+calls or sub-flows) may result in resource exhaustion—such as CPU, memory, API rate limits, or network bandwidth starvation.</p>
+<ul>
+<li><p>Limit the number of parallel branches to a reasonable level for your deployment environment.</p></li>
+<li><p>Monitor usage and apply throttling or limits as appropriate at the infrastructure or execution engine layer.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="summary-recommendations">
+<h3>Summary Recommendations<a class="headerlink" href="#summary-recommendations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Design parallel blocks to perform <strong>independent, stateless tasks</strong> wherever possible.</p></li>
+<li><p>Avoid interactive steps (like user input requests, client tools, confirmations) and uncontrolled state modifications in parallel branches.</p></li>
+<li><p>Always validate that downstream infrastructure can handle the degree of parallelism configured.</p></li>
+<li><p>Perform security and correctness reviews of all flows containing parallel nodes to identify unintended side effects or race conditions.</p></li>
+</ul>
+</section>
+</section>
 <section id="other-security-concerns">
 <h2>Other Security Concerns<a class="headerlink" href="#other-security-concerns" title="Permalink to this heading">#</a></h2>
 <p>For any other security concerns, please submit a <a class="reference external" href="https://github.com/oracle/agent-spec/issues">GitHub issue</a>.</p>
@@ -740,6 +807,11 @@ utilities to avoid unsafe behavior.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-regarding-assistant-and-flow-serialization">Considerations regarding assistant and flow serialization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-regarding-parallelization">Considerations regarding Parallelization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-semantics-and-safety-guidelines">Execution Semantics and Safety Guidelines</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-recommendations">Summary Recommendations</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-security-concerns">Other Security Concerns</a></li>
 </ul>
   </nav></div>
