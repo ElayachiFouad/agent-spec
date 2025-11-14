@@ -64,6 +64,15 @@ p.bd-links__title {
     align-items: center;
 }
 
+.bd-version-switcher .dropdown-menu {
+    display: block !important;          /* ensure it's a normal block menu */
+}
+
+.bd-version-switcher .dropdown-menu .dropdown-item {
+    display: block !important;          /* one item per line */
+    width: 100%;                        /* fill menu width */
+}
+
 .search-button__button {
     display: flex !important;
     justify-content: flex-end !important;
