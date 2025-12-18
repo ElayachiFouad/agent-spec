@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting…</title>
+</head>
+<body>
+  <p>Redirecting to development docs…</p>
+
+  <script>
+    (function () {
+      const basePath = "/agent-spec/";
+      const p = window.location.pathname;
+
+      // Only handle paths under this project
+      if (!p.startsWith(basePath)) return;
+
+      // Strip "/agent-spec/"
+      const rel = p.slice(basePath.length).replace(/^\/+/, ""); // e.g. adapters/langgraph.html
+
+      // If already under development/, stop (prevents loops)
+      if (rel.startsWith("development/")) return;
+
+      // Also avoid looping if someone hits an existing versioned path
+      if (/^\d+\.\d+\.\d+\//.test(rel)) return;
+
+      // Redirect to the same relative path under development/
+      window.location.replace(basePath + "development/" + rel + window.location.search + window.location.hash);
+    })();
+  </script>
+</body>
+</html>
