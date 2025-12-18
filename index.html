@@ -1,73 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Redirecting…</title>
 </head>
 <body>
-  <p id="msg">Redirecting…</p>
+  <p>Redirecting to the latest stable documentation…</p>
 
   <script>
-    (function () {
-      const basePath = "/agent-spec/";
-      const path = window.location.pathname;
-
-      // If we're not under /agent-spec/, bail out
-      if (!path.startsWith(basePath)) return;
-
-      // Relative path after /agent-spec/
-      const rel = path.slice(basePath.length).replace(/^\/+/, ""); // e.g. adapters/langgraph.html
-
-      // If already versioned, do NOT redirect (prevents loops)
-      // Covers: development/, 25.4.1/, 25.4.2/, 26.1.0/, etc.
-      if (/^(development|dev|\d+\.\d+\.\d+)\//.test(rel)) {
-        document.getElementById("msg").textContent =
-          "Page not found in this documentation version.";
-        return;
-      }
-
-      // Loop guard per-path in this browser tab
-      const key = "docs-404-redirect:" + rel;
-      const attempts = Number(sessionStorage.getItem(key) || "0");
-      if (attempts >= 2) {
-        document.getElementById("msg").innerHTML =
-          `Could not find this page in stable or dev.<br>
-           Try: <a href="${basePath}">Docs home</a> ·
-           <a href="${basePath}development/${rel}">Dev</a>`;
-        return;
-      }
-      sessionStorage.setItem(key, String(attempts + 1));
-
-      function normalizeBase(urlOrPath) {
-        // Accept absolute URL from switcher.json or relative like "development/"
-        if (/^https?:\/\//.test(urlOrPath)) return urlOrPath.replace(/\/+$/, "/");
-        return (window.location.origin + basePath + urlOrPath).replace(/\/+$/, "/") + "/";
-      }
-
-      function go(base) {
-        const target = base.replace(/\/+$/, "/") + rel;
-        window.location.replace(target);
-      }
-
-      fetch(basePath + "switcher.json")
-        .then(r => r.json())
-        .then(versions => {
-          // first non-dev = stable (assumes your JSON is ordered stable-first)
-          const stable = versions.find(v => v.version !== "dev");
-          if (attempts === 0 && stable?.url) return go(normalizeBase(stable.url));
-
-          // second attempt: dev
-          const dev = versions.find(v => v.version === "dev");
-          if (dev?.url) return go(normalizeBase(dev.url));
-
-          // last resort: development folder
-          return go(normalizeBase("development/"));
-        })
-        .catch(() => {
-          // last resort on fetch failure
-          return go(normalizeBase("development/"));
-        });
-    })();
+    fetch("switcher.json")
+      .then(response => response.json())
+      .then(versions => {
+        const stable = versions.find(v => v.version !== "dev");
+        window.location.replace(stable ? stable.url : "development/");
+      })
+      .catch(() => {
+        window.location.replace("development/");
+      });
   </script>
 </body>
 </html>
