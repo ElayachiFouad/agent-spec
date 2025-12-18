@@ -5,40 +5,67 @@
   <title>Redirecting…</title>
 </head>
 <body>
-  <p>Redirecting…</p>
+  <p id="msg">Redirecting…</p>
 
   <script>
     (function () {
-      // e.g. /agent-spec/adapters/langgraph.html
-      const currentPath = window.location.pathname;
-
-      // your GitHub Pages project base path
       const basePath = "/agent-spec/";
+      const path = window.location.pathname;
 
-      // Extract the requested path *after* /agent-spec/
-      let rel = currentPath.startsWith(basePath) ? currentPath.slice(basePath.length) : "";
-      // rel now: "adapters/langgraph.html"
+      // If we're not under /agent-spec/, bail out
+      if (!path.startsWith(basePath)) return;
 
-      // If someone hits "/" or empty, let index.html handle it
-      if (!rel || rel === "index.html") {
-        window.location.replace(basePath);
+      // Relative path after /agent-spec/
+      const rel = path.slice(basePath.length).replace(/^\/+/, ""); // e.g. adapters/langgraph.html
+
+      // If already versioned, do NOT redirect (prevents loops)
+      // Covers: development/, 25.4.1/, 25.4.2/, 26.1.0/, etc.
+      if (/^(development|dev|\d+\.\d+\.\d+)\//.test(rel)) {
+        document.getElementById("msg").textContent =
+          "Page not found in this documentation version.";
         return;
+      }
+
+      // Loop guard per-path in this browser tab
+      const key = "docs-404-redirect:" + rel;
+      const attempts = Number(sessionStorage.getItem(key) || "0");
+      if (attempts >= 2) {
+        document.getElementById("msg").innerHTML =
+          `Could not find this page in stable or dev.<br>
+           Try: <a href="${basePath}">Docs home</a> ·
+           <a href="${basePath}development/${rel}">Dev</a>`;
+        return;
+      }
+      sessionStorage.setItem(key, String(attempts + 1));
+
+      function normalizeBase(urlOrPath) {
+        // Accept absolute URL from switcher.json or relative like "development/"
+        if (/^https?:\/\//.test(urlOrPath)) return urlOrPath.replace(/\/+$/, "/");
+        return (window.location.origin + basePath + urlOrPath).replace(/\/+$/, "/") + "/";
+      }
+
+      function go(base) {
+        const target = base.replace(/\/+$/, "/") + rel;
+        window.location.replace(target);
       }
 
       fetch(basePath + "switcher.json")
         .then(r => r.json())
         .then(versions => {
-          // pick latest stable (first non-dev entry)
+          // first non-dev = stable (assumes your JSON is ordered stable-first)
           const stable = versions.find(v => v.version !== "dev");
-          const targetBase = stable ? stable.url : (window.location.origin + basePath + "development/");
+          if (attempts === 0 && stable?.url) return go(normalizeBase(stable.url));
 
-          // Ensure exactly one slash between base and rel
-          const target = targetBase.replace(/\/+$/, "/") + rel.replace(/^\/+/, "");
-          window.location.replace(target);
+          // second attempt: dev
+          const dev = versions.find(v => v.version === "dev");
+          if (dev?.url) return go(normalizeBase(dev.url));
+
+          // last resort: development folder
+          return go(normalizeBase("development/"));
         })
         .catch(() => {
-          // last resort: dev
-          window.location.replace(basePath + "development/" + rel);
+          // last resort on fetch failure
+          return go(normalizeBase("development/"));
         });
     })();
   </script>
