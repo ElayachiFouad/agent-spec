@@ -1,22 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Redirecting…</title>
 </head>
 <body>
-  <p>Redirecting to the latest stable documentation…</p>
+  <p>Redirecting…</p>
 
   <script>
-    fetch("switcher.json")
-      .then(response => response.json())
-      .then(versions => {
-        const stable = versions.find(v => v.version !== "dev");
-        window.location.replace(stable ? stable.url : "development/");
-      })
-      .catch(() => {
-        window.location.replace("development/");
-      });
+    (function () {
+      // e.g. /agent-spec/adapters/langgraph.html
+      const currentPath = window.location.pathname;
+
+      // your GitHub Pages project base path
+      const basePath = "/agent-spec/";
+
+      // Extract the requested path *after* /agent-spec/
+      let rel = currentPath.startsWith(basePath) ? currentPath.slice(basePath.length) : "";
+      // rel now: "adapters/langgraph.html"
+
+      // If someone hits "/" or empty, let index.html handle it
+      if (!rel || rel === "index.html") {
+        window.location.replace(basePath);
+        return;
+      }
+
+      fetch(basePath + "switcher.json")
+        .then(r => r.json())
+        .then(versions => {
+          // pick latest stable (first non-dev entry)
+          const stable = versions.find(v => v.version !== "dev");
+          const targetBase = stable ? stable.url : (window.location.origin + basePath + "development/");
+
+          // Ensure exactly one slash between base and rel
+          const target = targetBase.replace(/\/+$/, "/") + rel.replace(/^\/+/, "");
+          window.location.replace(target);
+        })
+        .catch(() => {
+          // last resort: dev
+          window.location.replace(basePath + "development/" + rel);
+        });
+    })();
   </script>
 </body>
 </html>
